@@ -799,8 +799,8 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
                 null);
         }
 
-        boolean orderly = this.defaultMQPushConsumer.getMessageListener() instanceof MessageListenerOrderly;
-        boolean concurrently = this.defaultMQPushConsumer.getMessageListener() instanceof MessageListenerConcurrently;
+        boolean orderly = this.defaultMQPushConsumer.getMessageListener() instanceof MessageListenerOrderly; //顺序消费，one queue,one thread
+        boolean concurrently = this.defaultMQPushConsumer.getMessageListener() instanceof MessageListenerConcurrently; //可以并发消费
         if (!orderly && !concurrently) {
             throw new MQClientException(
                 "messageListener must be instanceof MessageListenerOrderly or MessageListenerConcurrently"
@@ -826,8 +826,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
                 null);
         }
 
-        // consumeConcurrentlyMaxSpan
-        if (this.defaultMQPushConsumer.getConsumeConcurrentlyMaxSpan() < 1
+        if (this.defaultMQPushConsumer.getConsumeConcurrentlyMaxSpan() < 1 // consumeConcurrentlyMaxSpan 并发消费允许的消费跨度
             || this.defaultMQPushConsumer.getConsumeConcurrentlyMaxSpan() > 65535) {
             throw new MQClientException(
                 "consumeConcurrentlyMaxSpan Out of range [1, 65535]"

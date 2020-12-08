@@ -71,7 +71,7 @@ public class NamesrvController {
     }
 
     public boolean initialize() {
-
+        //fixme kvConfig（kvConfig.json） 保存的是啥呢？
         this.kvConfigManager.load();
 
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.brokerHousekeepingService);
@@ -81,6 +81,8 @@ public class NamesrvController {
 
         this.registerProcessor();
 
+        //每10s去scan一些不活跃的broker
+        //todo 注册的时候在broker启动的时候；定时上报的是在哪？
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override

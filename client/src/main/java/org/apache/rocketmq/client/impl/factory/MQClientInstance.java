@@ -69,7 +69,11 @@ public class MQClientInstance {
     private final long bootTimestamp = System.currentTimeMillis();
     /**
      * Producer Map
-     */
+     *
+     * 相当于是一个topic组里的MQProducerInner map
+     * 其中MQProducerInner 的默认实现类是MQProducerInnerImpl
+       里面定义了一个变量 ConcurrentHashMap<String, TopicPublishInfo> topicPublishInfoTable  key为topic
+     *      */
     private final ConcurrentHashMap<String/* group */, MQProducerInner> producerTable = new ConcurrentHashMap<>();
     /**
      * Consumer Map
@@ -89,7 +93,7 @@ public class MQClientInstance {
     private final Lock lockNamesrv = new ReentrantLock();
     private final Lock lockHeartbeat = new ReentrantLock();
     /**
-     * Broker名字 和 Broker地址相关 Map
+     * Broker名字 和 Broker地址相关 Map   broker名字下主从信息的地址
      */
     private final ConcurrentHashMap<String/* Broker Name */, HashMap<Long/* brokerId */, String/* address */>> brokerAddrTable =
             new ConcurrentHashMap<>();
@@ -607,6 +611,15 @@ public class MQClientInstance {
                             }
                         }
                     } else {
+                        //普通的一个topic返回的信息如下，
+                        //broker 一个主配置
+                        /**
+                         * topicRouteData：
+                         * orderTopicConf = null
+                         * queueDatas = QueueData [brokerName=broker-a, readQueueNums=4, writeQueueNums=4, perm=6, topicSynFlag=0]
+                         * brokerDatas = BrokerData [brokerName=broker-a, brokerAddrs={0=172.18.192.39:10911}]
+                         * filterServerTable 空
+                         */
                         topicRouteData = this.mQClientAPIImpl.getTopicRouteInfoFromNameServer(topic, 1000 * 3);
                     }
                     if (topicRouteData != null) {

@@ -51,6 +51,9 @@ public class MessageExt extends Message {
     private long storeTimestamp;
     /**
      * 存储host
+     * broker的存储地址
+     *
+     * 有了broker和queueId 就确定了消息存储的地方了
      */
     private SocketAddress storeHost;
     private String msgId;

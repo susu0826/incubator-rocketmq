@@ -323,6 +323,9 @@ public class DefaultMessageStore implements MessageStore {
 
         long beginTime = this.getSystemClock().now();
         // 添加消息到commitLog
+
+        //todo 重要 写入消息
+        //1 CommitLog ：1 MappedFileQueue ： N MappedFile
         PutMessageResult result = this.commitLog.putMessage(msg);
 
         long eclipseTime = this.getSystemClock().now() - beginTime;

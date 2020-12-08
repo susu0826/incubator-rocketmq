@@ -39,12 +39,17 @@ public class BrokerData implements Comparable<BrokerData> {
     private String brokerName;
     /**
      * broker角色编号 和 broker地址 Map
+     *
+     * 一个brokerName下分主从，主从通过brokerId标识，0，1
+     * 0 代表主
      */
     private HashMap<Long/* brokerId */, String/* broker address */> brokerAddrs;
 
     /**
      * 获取 Broker地址
      * 优先级： Master > {@link #brokerAddrs}第一个
+     *
+     * 优先获取主，没有的时候随机选一个不为空的
      *
      * @return Broker地址
      */

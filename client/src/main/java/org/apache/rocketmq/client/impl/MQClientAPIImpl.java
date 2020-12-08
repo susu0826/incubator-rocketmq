@@ -1230,7 +1230,8 @@ public class MQClientAPIImpl {
         throws RemotingException, MQClientException, InterruptedException {
         GetRouteInfoRequestHeader requestHeader = new GetRouteInfoRequestHeader();
         requestHeader.setTopic(topic);
-
+        //请求中通过RequestCode区分请求类型
+        //这里GET_ROUTEINTO_BY_TOPIC 表示的是 通过topic查询路由信息
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.GET_ROUTEINTO_BY_TOPIC, requestHeader);
 
         RemotingCommand response = this.remotingClient.invokeSync(null, request, timeoutMillis);

@@ -43,6 +43,8 @@ public class MappedFileQueue {
     private final String storePath;
     /**
      * 每个映射文件大小
+     *
+     * 默认为1G = 1024 * 1024 * 1024B = 1073741824
      */
     private final int mappedFileSize;
     /**

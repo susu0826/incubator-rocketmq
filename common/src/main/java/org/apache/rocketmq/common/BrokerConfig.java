@@ -40,6 +40,8 @@ public class BrokerConfig {
      * Broker 权限（读写等）
      */
     private int brokerPermission = PermName.PERM_READ | PermName.PERM_WRITE;
+
+    //定义了默认的queue数量，8
     private int defaultTopicQueueNums = 8;
     @ImportantField
     private boolean autoCreateTopicEnable = true;
