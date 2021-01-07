@@ -952,6 +952,11 @@ public class CommitLog {
 
     /**
      * flush commitLog 线程服务
+     *
+     * 刷盘操作是一个线程操作，分三种刷盘策略，默认是性能最好的那种
+     * 调用连：
+     * 在启动brokerController时--》实例化DefaultMessageStore ---》实例化CommitLog --》实例化FlushCommitLogService
+     * 使用：在brokerController的start时，开启了FlushCommitLogService实例的线程start方法，执行run
      */
     abstract class FlushCommitLogService extends ServiceThread {
         protected static final int RETRY_TIMES_OVER = 10;
