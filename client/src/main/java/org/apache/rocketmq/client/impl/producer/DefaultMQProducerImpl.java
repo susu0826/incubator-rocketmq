@@ -691,6 +691,9 @@ public class DefaultMQProducerImpl implements MQProducerInner {
      * @throws RemotingException 当请求发生异常
      * @throws MQBrokerException 当Broker发生异常
      * @throws InterruptedException 当线程被打断
+     *
+     *
+     * 想知道broker怎么存储的去看 【SendMessageProcessor】
      */
     private SendResult sendKernelImpl(final Message msg, //
         final MessageQueue mq, //

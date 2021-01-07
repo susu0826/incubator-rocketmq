@@ -68,6 +68,10 @@ public class MixAll {
     public static final long MASTER_ID = 0L;
     public static final long CURRENT_JVM_PID = getPID();
 
+    /**
+     * 是为消费者端使用的
+     * 生产者端重复发消息不会有这个 topic还是那个topic
+     */
     public static final String RETRY_GROUP_TOPIC_PREFIX = "%RETRY%";
 
     // TODO 待读

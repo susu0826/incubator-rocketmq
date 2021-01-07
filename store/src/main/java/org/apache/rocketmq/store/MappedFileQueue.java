@@ -44,6 +44,8 @@ public class MappedFileQueue {
     /**
      * 每个映射文件大小
      *
+     * 每一个mappedFile大小
+     *
      * 默认为1G = 1024 * 1024 * 1024B = 1073741824
      */
     private final int mappedFileSize;
@@ -232,11 +234,13 @@ public class MappedFileQueue {
         }
 
         if (createOffset != -1 && needCreate) { // 创建文件
+            //文件的名称就是开始的createOffset
             String nextFilePath = this.storePath + File.separator + UtilAll.offset2FileName(createOffset);
             String nextNextFilePath = this.storePath + File.separator
                 + UtilAll.offset2FileName(createOffset + this.mappedFileSize);
             MappedFile mappedFile = null;
 
+            //todo 这个是干啥？
             if (this.allocateMappedFileService != null) {
                 mappedFile = this.allocateMappedFileService.putRequestAndReturnMappedFile(nextFilePath,
                     nextNextFilePath, this.mappedFileSize);

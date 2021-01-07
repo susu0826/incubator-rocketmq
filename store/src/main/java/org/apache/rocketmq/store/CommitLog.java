@@ -648,6 +648,7 @@ public class CommitLog {
             msg.setStoreTimestamp(beginLockTimestamp);
 
             // 当不存在映射文件时，进行创建
+            //或者是映射的文件满了
             if (null == mappedFile || mappedFile.isFull()) {
                 mappedFile = this.mappedFileQueue.getLastMappedFile(0); // Mark: NewFile may be cause noise
             }
@@ -707,7 +708,9 @@ public class CommitLog {
         // Statistics
         storeStatsService.getSinglePutMessageTopicTimesTotal(msg.getTopic()).incrementAndGet();
         storeStatsService.getSinglePutMessageTopicSizeTotal(topic).addAndGet(result.getWroteBytes());
-
+        /**
+         * 下面的同步异步刷盘很重要
+         */
         // 进行同步||异步 flush||commit
         GroupCommitRequest request = null;
         // Synchronization flush
@@ -956,6 +959,8 @@ public class CommitLog {
 
     /**
      * 实时 commit commitLog 线程服务
+     * CommitRealTimeService：异步刷盘并且开启内存字节缓冲区
+     * 性能最高
      */
     class CommitRealTimeService extends FlushCommitLogService {
 
@@ -1016,6 +1021,8 @@ public class CommitLog {
 
     /**
      * 实时 flush commitLog 线程服务
+     *
+     * FlushRealTimeService：异步刷盘但是不开启内存字节缓冲区
      */
     class FlushRealTimeService extends FlushCommitLogService {
         /**
@@ -1107,6 +1114,8 @@ public class CommitLog {
 
     /**
      * GroupCommit Service
+     *
+     * GroupCommitService：同步刷盘 性能最低
      */
     class GroupCommitService extends FlushCommitLogService {
         /**
@@ -1285,6 +1294,8 @@ public class CommitLog {
             keyBuilder.append(msgInner.getQueueId());
             String key = keyBuilder.toString();
             Long queueOffset = CommitLog.this.topicQueueTable.get(key);
+            //queueOffset 消息队列位置，根据topic-queueId为key，来一个消息，queueOffset+1
+            //应该可以通过这个值去查询有多少条消息了
             if (null == queueOffset) {
                 queueOffset = 0L;
                 CommitLog.this.topicQueueTable.put(key, queueOffset);
@@ -1356,6 +1367,7 @@ public class CommitLog {
             // 6 QUEUE_OFFSET
             this.msgStoreItemMemory.putLong(queueOffset);
             // 7 PHYSICAL_OFFSET
+            //这条消息的物理地址
             this.msgStoreItemMemory.putLong(fileFromOffset + byteBuffer.position());
             // 8 SYS_FLAG
             this.msgStoreItemMemory.putInt(msgInner.getSysFlag());

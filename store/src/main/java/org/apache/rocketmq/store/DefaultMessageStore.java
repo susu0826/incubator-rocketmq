@@ -48,6 +48,11 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.apache.rocketmq.store.config.BrokerRole.SLAVE;
 
+/**
+ * 默认的消息存储处理类
+ *
+ * 内部一个CommitLog
+ */
 public class DefaultMessageStore implements MessageStore {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
 
@@ -325,6 +330,8 @@ public class DefaultMessageStore implements MessageStore {
         // 添加消息到commitLog
 
         //todo 重要 写入消息
+        //所有的消息到broker这个实例中是由一个默认消息存储类来处理
+        //而这个类又是委派给内部的commitLog 来处理
         //1 CommitLog ：1 MappedFileQueue ： N MappedFile
         PutMessageResult result = this.commitLog.putMessage(msg);
 
