@@ -265,6 +265,8 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
     /**
      * 发送消息
      *
+     * 处理消息到磁盘
+     *
      * @param ctx channel ctx
      * @param request 请求
      * @param sendMessageContext 发送消息ctx

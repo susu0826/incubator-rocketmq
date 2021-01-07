@@ -351,6 +351,8 @@ public class BrokerController {
     public void registerProcessor() {
         /**
          * SendMessageProcessor
+         *
+         * 处理消息从producer发到broker时的处理器
          */
         SendMessageProcessor sendProcessor = new SendMessageProcessor(this);
         sendProcessor.registerSendMessageHook(sendMessageHookList);

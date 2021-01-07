@@ -29,7 +29,21 @@ public class QueueData implements Comparable<QueueData> {
      */
     private String brokerName;
     /**
-     * 读队列长度
+     *读队列长度
+     *
+     * 读队列长度和下面的写队列长度是干嘛的呢
+     * 最终将这个变为了MessageQueue 表示的是订阅的queue
+     * 如 MQClientInstance#topicRouteData2TopicSubscribeInfo(String, TopicRouteData)
+     * if (PermName.isReadable(qd.getPerm())) {
+     *                 for (int i = 0; i < qd.getReadQueueNums(); i++) {
+     *                     MessageQueue mq = new MessageQueue(topic, qd.getBrokerName(), i);
+     *                     mqList.add(mq);
+     *                 }
+     *             }
+     *
+     *
+     * 下面的writeQueue也是如此
+     * 注意⚠️ 两个值相等才会都获取到消息，一旦写多，读少，那么会有部分消息消费不了
      */
     private int readQueueNums;
     /**
