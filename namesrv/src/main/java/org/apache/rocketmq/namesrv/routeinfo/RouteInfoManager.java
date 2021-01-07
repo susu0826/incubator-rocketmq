@@ -40,6 +40,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * 这个类是在namesrv下面，说明是供namesrv 使用的
+ */
 public class RouteInfoManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
     private final static long BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
@@ -47,12 +50,13 @@ public class RouteInfoManager {
     /**
      * topic 与 队列数据数组 Map
      * 一个 topic 可以对应 多个Broker
+     * 这个列表里的broker指的是master broker
      */
     private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
     /**
      * broker名 与 broker数据 Map
      * 一个broker名下可以有多个broker，即broker可以同名
-     * TODO 疑问：需要研究下
+     * 一般一个master broker和自己的多个slave broker同名，根据brokerId 区分主从，0为主，其他>0为从
      */
     private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
     /**
@@ -64,7 +68,11 @@ public class RouteInfoManager {
      */
     private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
     /**
-     * broker地址 与 filtersrv数组 Map
+     * broker地址 与 filtersrv地址列表 Map
+     *
+     * 是 RocketMQ 的一种服务端过滤方式，一 个 Broker 可以有 一个 或 多个 Filter Server
+     *
+     * todo filter server干啥的 不知道
      */
     private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 

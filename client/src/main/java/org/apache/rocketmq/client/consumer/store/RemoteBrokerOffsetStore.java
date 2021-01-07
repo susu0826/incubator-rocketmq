@@ -38,6 +38,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Remote storage implementation
+ *
+ * 集群模式下用的Offset实现类
+ * 另外一个LocalFileOffsetStore 是广播模式下的实现类
  */
 public class RemoteBrokerOffsetStore implements OffsetStore {
     private final static Logger log = ClientLogger.getLog();

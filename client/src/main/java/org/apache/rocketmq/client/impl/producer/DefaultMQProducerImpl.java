@@ -507,6 +507,12 @@ public class DefaultMQProducerImpl implements MQProducerInner {
      * @throws RemotingException 当请求发生异常
      * @throws MQBrokerException 当Broker发生异常
      * @throws InterruptedException 当线程被打断
+     *
+     *
+     *
+     * 注意这个sendDefaultImpl 方法和 sendSelectImpl的区别
+     * 前一个是默认的发送，具体是发送到哪个MessageQueue 中间件给提供了
+     * 后一个是自己编写发送的选择逻辑
      */
     private SendResult sendDefaultImpl(//
         Message msg, //
@@ -987,7 +993,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
      * 选择队列发送消息
      *
      * @param msg 消息
-     * @param selector 队列选择器
+     * @param selector 队列选择器 使用它选择往哪个MessageQueue写入消息
      * @param arg 选择参数
      * @param communicationMode 通信方式
      * @param sendCallback 发送回调
@@ -997,10 +1003,15 @@ public class DefaultMQProducerImpl implements MQProducerInner {
      * @throws RemotingException 当调用发生异常时
      * @throws MQBrokerException 当Broker发生异常时
      * @throws InterruptedException 线程中断异常时
+     *
+     *
+     * 注意这个sendDefaultImpl 方法和 sendSelectImpl的区别
+     *      * 前一个是默认的发送，具体是发送到哪个MessageQueue 中间件给提供了
+     *      * 后一个是自己编写发送的选择逻辑
      */
     private SendResult sendSelectImpl(//
         Message msg, //
-        MessageQueueSelector selector, //
+        MessageQueueSelector selector, //使用它选择往哪个MessageQueue写入消息
         Object arg, //
         final CommunicationMode communicationMode, //
         final SendCallback sendCallback, final long timeout//

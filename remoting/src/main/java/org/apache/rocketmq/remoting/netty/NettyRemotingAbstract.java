@@ -151,6 +151,8 @@ public abstract class NettyRemotingAbstract {
             }
 
             try {
+                //使用的是线程池来调用，pair的结构是一个processor对应一个线程池，先将任务编排好后交给线程池来做的
+                //比如nameServer的DefaultRequestProcessor
                 final RequestTask requestTask = new RequestTask(run, ctx.channel(), cmd);
                 pair.getObject2().submit(requestTask);
             } catch (RejectedExecutionException e) {

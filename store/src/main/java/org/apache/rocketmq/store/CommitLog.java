@@ -43,6 +43,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Store all metadata downtime for recovery, data protection reliability
+ *
+ *
+ * 这个是物理存储
  */
 public class CommitLog {
 
