@@ -111,6 +111,12 @@ public class MQClientInstance {
             return new Thread(r, "MQClientFactoryScheduledThread");
         }
     });
+
+
+    /**
+     * 客户端netty 处理器
+     * 服务端供nameserver使用
+     */
     private final ClientRemotingProcessor clientRemotingProcessor;
     /**
      * 拉取消息线程服务
@@ -258,10 +264,13 @@ public class MQClientInstance {
                         this.mQClientAPIImpl.fetchNameServerAddr(); // TODO 待读：获取namesrv，从url
                     }
                     // Start request-response channel
+                    //开启客户端的netty channel
                     this.mQClientAPIImpl.start();
                     // Start various schedule tasks
+                    //不同的任务
                     this.startScheduledTask();
                     // Start pull service
+                    //org.apache.rocketmq.client.impl.consumer.PullMessageService.run
                     this.pullMessageService.start(); // TODO 疑问：producer调用这个干啥
                     // Start rebalance service
                     this.rebalanceService.start(); // TODO 疑问：producer调用这个干啥
@@ -297,7 +306,7 @@ public class MQClientInstance {
             }, 1000 * 10, 1000 * 60 * 2, TimeUnit.MILLISECONDS);
         }
 
-        // 定时拉取 Topic路由配置
+        // 定时拉取 Topic路由配置 30s更新一次
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -310,7 +319,9 @@ public class MQClientInstance {
             }
         }, 10, this.clientConfig.getPollNameServerInteval(), TimeUnit.MILLISECONDS);
 
-        // 定时同步消费进度
+        // 清除下线的broker
+        // 发送客户端信息心跳给broker
+        // 心跳中有包括 消费端的消费模式，还没有消费进度的信息，消费进度的信息在哪呢？ todo 在下面
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -324,10 +335,15 @@ public class MQClientInstance {
             }
         }, 1000, this.clientConfig.getHeartbeatBrokerInterval(), TimeUnit.MILLISECONDS);
 
+        /**
+         * 定时更新消费进度到broker
+         * 每5秒
+         * 因为是concurrentHashMap,所以不会产生并发
+         */
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
-            public void run() { // TODO 待读：ALL
+            public void run() { //
                 try {
                     MQClientInstance.this.persistAllConsumerOffset();
                 } catch (Exception e) {
@@ -336,10 +352,15 @@ public class MQClientInstance {
             }
         }, 1000 * 10, this.clientConfig.getPersistConsumerOffsetInterval(), TimeUnit.MILLISECONDS);
 
+        /**
+         * 调整线程池线程大小，这一版里面没有实际实现
+         * 这让我想起来了美团的一篇线程池动态化的文章，可以对比看看
+         * todo
+         */
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
-            public void run() { // TODO 待读：ALL
+            public void run() { //
                 try {
                     MQClientInstance.this.adjustThreadPool();
                 } catch (Exception e) {

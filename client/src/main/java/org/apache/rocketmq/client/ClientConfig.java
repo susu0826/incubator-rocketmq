@@ -43,6 +43,10 @@ public class ClientConfig {
      */
     private int persistConsumerOffsetInterval = 1000 * 5;
     private boolean unitMode = false;
+    /**
+     * todo 这个是啥？？？
+     * 单元名称？？
+     */
     private String unitName;
     private boolean vipChannelEnabled = Boolean.parseBoolean(System.getProperty(SEND_MESSAGE_WITH_VIP_CHANNEL_PROPERTY, "true"));
 

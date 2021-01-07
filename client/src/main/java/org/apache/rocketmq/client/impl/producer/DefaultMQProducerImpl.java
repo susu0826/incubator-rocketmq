@@ -126,6 +126,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
                 // 标记初始化失败，这个技巧不错。
                 this.serviceState = ServiceState.START_FAILED;
 
+                //校验producer 的 group
                 this.checkConfig();
 
                 if (!this.defaultMQProducer.getProducerGroup().equals(MixAll.CLIENT_INNER_PRODUCER_GROUP)) {
@@ -133,9 +134,13 @@ public class DefaultMQProducerImpl implements MQProducerInner {
                 }
 
                 // 获取MQClient对象
+                //这里命名的XXXFactory有点怪怪的，其实就是MQClientInstance
+                //根据 ip@instanceName@unitName 来唯一确定，如果一个机器中既有消费者又有生产者，实际公用这个对象
+                //因为 consumer的start方法也有this.mQClientFactory = MQClientManager.getInstance().getAndCreateMQClientInstance(this.defaultMQPushConsumer, this.rpcHook);
                 this.mQClientFactory = MQClientManager.getInstance().getAndCreateMQClientInstance(this.defaultMQProducer, rpcHook);
 
                 // 注册Producer
+                //只是生产者客户端的内存注册
                 boolean registerOK = mQClientFactory.registerProducer(this.defaultMQProducer.getProducerGroup(), this);
                 if (!registerOK) {
                     this.serviceState = ServiceState.CREATE_JUST;

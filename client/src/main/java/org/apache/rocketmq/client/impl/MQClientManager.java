@@ -38,6 +38,7 @@ public class MQClientManager {
     private AtomicInteger factoryIndexGenerator = new AtomicInteger();
     /**
      * clientId 与 MQClient对象 映射Map
+     * clientId 的格式：ip@instanceName@unitName
      */
     private ConcurrentHashMap<String/* clientId */, MQClientInstance> factoryTable = new ConcurrentHashMap<>();
 
