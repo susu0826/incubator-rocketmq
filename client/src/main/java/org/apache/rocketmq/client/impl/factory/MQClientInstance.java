@@ -273,6 +273,8 @@ public class MQClientInstance {
                     //org.apache.rocketmq.client.impl.consumer.PullMessageService.run
                     this.pullMessageService.start(); // TODO 疑问：producer调用这个干啥
                     // Start rebalance service
+                    //消费者的消费平衡策略触发
+                    //org.apache.rocketmq.client.impl.consumer.RebalanceService
                     this.rebalanceService.start(); // TODO 疑问：producer调用这个干啥
                     // Start push service
                     this.defaultMQProducer.getDefaultMQProducerImpl().start(false); // TODO 疑问：为什么这里要调用
